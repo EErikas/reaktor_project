@@ -1,0 +1,5 @@
+*.sql
+*.pyc
+__pycache__
+.idea
+.code
