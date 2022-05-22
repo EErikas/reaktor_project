@@ -14,10 +14,6 @@ def show_warnings(request, warnings):
             messages.success(request, warning.get('description', 'Unknown message'))
 
 
-def index(request):
-    return redirect('package-list')
-
-
 def file_upload(request):
     if request.method == 'POST':
 
