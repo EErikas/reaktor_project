@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1 class="mt-5">{{ title }} </h1>
+    <p class="main">
+        Here you can see all the packages from the <i>poetry.lock</i> file
+    </p>
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+        <tr class="text-center">
+            <th scope="col">#</th>
+            <th scope="col">Package</th>
+        </tr>
+        </thead>
+        <tbody class="text-center">
+        {% for package in  packages %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td><a href="{% url 'package-page' package_name=package.name %}">{{ package.name }}</a></td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1 class="mt-5">{{ package.name }} </h1>
+    <p class="main">{{ package.description }}</p>
+
+    <div id="accordion">
+        {% if package.dependencies %}
+            <div class="card">
+                <div class="card-header" id="headingDependencies">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseDependencies"
+                                aria-expanded="true" aria-controls="collapseDependencies">
+                            Dependencies
+                        </button>
+                    </h5>
+                </div>
+
+                <div id="collapseDependencies" class="collapse show" aria-labelledby="headingDependencies"
+                     data-parent="#accordion">
+                    <div class="card-body">
+                        <ul>
+                            {% for dependency in package.dependencies %}
+                                <li>
+                                    {% if dependency.installed %}
+                                        <a href="{% url 'package-page' package_name=dependency.name %}">{{ dependency.name }}</a>
+                                    {% else %}
+                                        {{ dependency.name }}
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if package.extras %}
+            <div class="card">
+                <div class="card-header" id="headingExtras">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseExtras"
+                                aria-expanded="false" aria-controls="collapseExtras">
+                            Extras
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseExtras" class="collapse" aria-labelledby="headingExtras" data-parent="#accordion">
+                    <div class="card-body">
+                        {% for extra in package.extras %}
+                            <h5>{{ extra.name }}</h5>
+                            {% for dependency in extra.dependencies %}
+                                <li>
+                                    {% if dependency.installed %}
+                                        <a href="{% url 'package-page' package_name=dependency.name %}">{{ dependency.name }}</a>
+                                    {% else %}
+                                        {{ dependency.name }}
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+
+                        {% endfor %}
+
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        {% if reverse_dependencies %}
+            <div class="card">
+                <div class="card-header" id="headingReverseDependencies">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse"
+                                data-target="#collapseReverseDependencies"
+                                aria-expanded="false" aria-controls="collapseReverseDependencies">
+                            Reverse Dependencies
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseReverseDependencies" class="collapse" aria-labelledby="headingReverseDependencies"
+                     data-parent="#accordion">
+                    <div class="card-body">
+
+                        {% for dependency in reverse_dependencies %}
+                            <li>
+                                <a href="{% url 'package-page' package_name=dependency %}">{{ dependency }}</a>
+                            </li>
+                        {% endfor %}
+
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+
+{% endblock %}

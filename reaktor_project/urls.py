@@ -15,7 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from poetry_parser import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', views.index, name='index'),
+    path('upload/', views.file_upload, name='upload'),
+    path('package-list/', views.package_list, name='package-list'),
+    path('package/<str:package_name>', views.package_page, name='package-page')
+
 ]

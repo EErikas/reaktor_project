@@ -1,0 +1,39 @@
+{% extends 'style.html' %}
+
+{% block body %}
+
+    <header class="site-header">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand mr-4" href="">{{ project_name }}</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle"
+                        aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarToggle">
+                    <div class="navbar-nav mr-auto">
+                        <a class="nav-item nav-link" href="{% url 'package-list' %}">View Packages</a>
+                        <a class="nav-item nav-link" href="{% url 'upload' %}">Upload</a>
+                        <a class="nav-item nav-link" href="https://github.com/EErikas/reaktor_project"
+                           rel="noopener noreferrer" target="_blank">Project Repository</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+    </header>
+    <div class="container">
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+
+    </div>
+
+{% endblock %}
