@@ -1,4 +1,4 @@
-*.sql
+*.sqlite3
 *.pyc
 __pycache__
 .idea
