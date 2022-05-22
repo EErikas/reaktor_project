@@ -14,34 +14,36 @@ def show_warnings(request, warnings):
             messages.success(request, warning.get('description', 'Unknown message'))
 
 
-# def get_session_package_list(request):
-#     request.session.get('packages',[])
-# Create your views here.
 def index(request):
-    # if len(packages) == 0:
-    #     return redirect('upload')
     return redirect('package-list')
 
 
 def file_upload(request):
     if request.method == 'POST':
-        file = request.FILES['file'].read()
-        opa = PackageParser(file.decode('utf-8'))
-        show_warnings(request, opa.get_warnings())
-        if opa.no_critical():
-            request.session['packages'] = opa.get_packages()
-            request.session['installed'] = opa.get_installed()
-            request.session['reverse_dependencies'] = opa.get_reverse_dependencies()
-            # return JsonResponse(opa.get_packages(), safe=False)
+
+        # If file is successfully read, it's converted to string
+        # otherwise, an empty string is passed
+        if request.FILES.get('file'):
+            file_text = request.FILES.get('file').read().decode('utf-8')
+        else:
+            file_text = ''
+
+        data = PackageParser(file_text)
+        show_warnings(request, data.get_warnings())
+        if data.no_critical():
+            request.session['packages'] = data.get_packages()
+            request.session['installed'] = data.get_installed()
+            request.session['reverse_dependencies'] = data.get_reverse_dependencies()
+            # return JsonResponse(data.get_packages(), safe=False)
             return redirect('package-list')
             # return render(request, 'packages.html', context={
             #     'title': 'List of packages',
-            #     'packages': opa.get_packages()
+            #     'packages': data.get_packages()
             # })
-            # return JsonResponse(opa.get_packages(), safe=False)
+            # return JsonResponse(data.get_packages(), safe=False)
 
-        # print(opa.get_packages())
-        # return JsonResponse(opa.get_packages(), safe=False)
+        # print(data.get_packages())
+        # return JsonResponse(data.get_packages(), safe=False)
     # else:
     return render(request, 'upload.html')
 
