@@ -1,4 +1,4 @@
-# Reactor project
+# Reaktor project
 
 ## About the project
 
