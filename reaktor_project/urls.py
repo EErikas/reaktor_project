@@ -13,12 +13,10 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-# from django.contrib import admin
 from django.urls import path
 from poetry_parser import views
 
 urlpatterns = [
-    # path('admin/', admin.site.urls),
     path('', views.package_list, name='package-list'),
     path('upload/', views.file_upload, name='upload'),
     path('package/<str:package_name>', views.package_page, name='package-page'),
