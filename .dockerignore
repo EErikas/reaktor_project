@@ -1,0 +1,10 @@
+*.sqlite3
+*.pyc
+__pycache__
+.idea
+.code
+.env
+.gitignore
+Procfile
+runtime.txt
+readme.md
