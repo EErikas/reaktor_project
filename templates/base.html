@@ -11,12 +11,29 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarToggle">
-                    <div class="navbar-nav mr-auto">
-                        <a class="nav-item nav-link" href="{% url 'package-list' %}">View Packages</a>
-                        <a class="nav-item nav-link" href="{% url 'upload' %}">Upload</a>
-                        <a class="nav-item nav-link" href="https://github.com/EErikas/reaktor_project"
-                           rel="noopener noreferrer" target="_blank">Project Repository</a>
-                    </div>
+                    <ul class="navbar-nav mr-auto">
+                        <li><a class="nav-item nav-link" href="{% url 'package-list' %}">View Packages</a></li>
+                        <li><a class="nav-item nav-link" href="{% url 'upload' %}">Upload</a></li>
+                        <li><a class="nav-item nav-link" href="https://github.com/EErikas/reaktor_project"
+                               rel="noopener noreferrer" target="_blank">Project Repository</a></li>
+                        {% if debug %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Debug actions
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{% url 'package-dump' %}">Packages</a>
+                                    <a class="dropdown-item" href="{% url 'installed-packages-dump' %}">Installed
+                                        packages</a>
+                                    <a class="dropdown-item" href="{% url 'reverse-dependencies-dump' %}">Reverse
+                                        dependencies</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="{% url 'clear-session' %}">Clear session</a>
+                                </div>
+                            </li>
+                        {% endif %}
+                    </ul>
                 </div>
             </div>
         </nav>

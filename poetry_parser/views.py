@@ -1,9 +1,12 @@
 from django.shortcuts import render, redirect, HttpResponse
-from django.http import JsonResponse
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
+from django.http import JsonResponse
+from django.conf import settings
 from .parser import PackageParser
 
 
+# Helper functions
 def show_warnings(request, warnings):
     for warning in warnings:
         if warning.get('level') == 'critical':
@@ -14,6 +17,11 @@ def show_warnings(request, warnings):
             messages.success(request, warning.get('description', 'Unknown message'))
 
 
+def is_debug(user):
+    return settings.DEBUG
+
+
+# Application views (Always available)
 def file_upload(request):
     if request.method == 'POST':
 
@@ -69,3 +77,34 @@ def package_page(request, package_name):
         'package': matching_pkgs[0],
         'reverse_dependencies': request.session.get('reverse_dependencies', {}).get(package_name)
     })
+
+
+# Debug views (only available in debug mode)
+'''
+user_passes_test is built in function that is used by django to check if user hsa permission to access the view
+In this application there's no user management implemented, nevertheless this decorator is used as an easy way to 
+redirect from the debug url in production mode. Therefore in this case, the 'login_url' is used for simply redirecting 
+to a working url
+'''
+
+
+@user_passes_test(is_debug, login_url='package-list')
+def dump_packages(request):
+    return JsonResponse(request.session.get('packages', []), safe=False)
+
+
+@user_passes_test(is_debug, login_url='package-list')
+def dump_installed_packages(request):
+    return JsonResponse(request.session.get('installed', []), safe=False)
+
+
+@user_passes_test(is_debug, login_url='package-list')
+def dump_reverse_dependencies(request):
+    return JsonResponse(request.session.get('reverse_dependencies', {}))
+
+
+@user_passes_test(is_debug, login_url='package-list')
+def clear_session(request):
+    request.session.clear()
+    messages.success(request, 'Session cleared successfully')
+    return redirect('package-list')

@@ -21,6 +21,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.package_list, name='package-list'),
     path('upload/', views.file_upload, name='upload'),
-    path('package/<str:package_name>', views.package_page, name='package-page')
-
+    path('package/<str:package_name>', views.package_page, name='package-page'),
+    # Debug views
+    path('debug/pacakge-dump', views.dump_packages, name='package-dump'),
+    path('debug/installed-packages-dump', views.dump_installed_packages, name='installed-packages-dump'),
+    path('debug/reverse-dependencies-dump', views.dump_reverse_dependencies, name='reverse-dependencies-dump'),
+    path('debug/clear-session', views.clear_session, name='clear-session'),
 ]
