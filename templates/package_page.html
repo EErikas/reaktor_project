@@ -83,7 +83,7 @@
 
                         {% for dependency in reverse_dependencies %}
                             <li>
-                                <a href="{% url 'package-page' package_name=dependency %}">{{ dependency }}</a>
+                                <a href="{% url 'package-page' package_name=dependency.pkg %}">{{ dependency.verbose_name }}</a>
                             </li>
                         {% endfor %}
 

@@ -123,50 +123,33 @@ class PackageParser:
         for pkg in installed_packages:
             deps = []
             for foo in self.__packages:
-                temp = [bar.get('name') for bar in foo.get_package().get('dependencies')]
-                if pkg in temp:
-                    deps.append(foo.get_package().get('name'))
-                # TODO: add extras too
-            reverse_deps.update({pkg: deps})
+                dependencies = [bar.get('name') for bar in foo.get_package().get('dependencies')]
+                pkg_name = foo.get_package().get('name')
+                if pkg in dependencies:
+                    # If reverse dependency is the base package, "pkg" and "verbose_name" are the same,
+                    # e.g., {"pkg" : "pytest", "verbose_name" : "pytest"}
+                    deps.append({'pkg': pkg_name, 'verbose_name': pkg_name})
+                for extra in foo.get_package().get('extras'):
+                    extra_dependencies = [bar.get('name') for bar in extra.get('dependencies')]
+                    if pkg in extra_dependencies:
+                        # If reverse dependency is in extra, "pkg" is base pkg and "verbose_name" is pkg[extra]
+                        # e.g., {"pkg" : "urllib3", "verbose_name" : "urllib3[secure]"}
+                        deps.append({'pkg': pkg_name, 'verbose_name': f'{pkg_name}[{extra.get("name")}]'})
+
+            # Add alphabetically sorted reverse dependencies to the list
+            reverse_deps.update({pkg: sorted(deps, key=lambda x: x.get('verbose_name'))})
         return reverse_deps
-        # def flatten(t):
-        #     # https://stackoverflow.com/questions/952914/how-to-make-a-flat-list-out-of-a-list-of-lists
-        #     return [item for sublist in t for item in sublist]
-        #
-        # installed_packages = self.get_installed()
-        # # reverse_dependencies = []
-        # print('opa')
-        # for pkg in self.__packages:
-        #     reverse_dependencies = []
-        #     # Go through the rest of packages
-        #     for foo in self.__packages:
-        #         dep_list = [bar.get('name') for bar in foo.get_package().get('dependencies')]
-        #         extra_list = flatten([
-        #             [foobar.get('name') for foobar in bar.get('dependencies')]
-        #             for bar in foo.get_package().get('extras')
-        #         ])
-        #         pkg_name = pkg.get_package().get('name')
-        #         if pkg_name in dep_list or pkg_name in extra_list:
-        #             # if pkg_name not in reverse_dependencies:
-        #             reverse_dependencies.append(pkg_name)
-        #     pkg.get_package().update({'reverse_dependencies': sorted(reverse_dependencies)})
-        #     # if pkg in [bar.get('name') for bar in foo.get_package().get('dependencies')]:
 
     def get_packages(self):
         installed_packages = self.get_installed()
 
         for package in self.__packages:
-            # package.get_package().update({'reverse_dependencies': []})
-            # Update extras if the package is installed
             for dep in package.get_package().get('dependencies'):
-                # if dep
                 dep.update({'installed': dep.get('name') in installed_packages})
             # Update if extra packages are installed or not
             for extra in package.get_package().get('extras'):
                 for dep in extra.get('dependencies'):
                     dep.update({'installed': dep.get('name') in installed_packages})
-
-        # self.get_reverse_dependencies()
 
         return [package.get_package() for package in self.__packages]
 
