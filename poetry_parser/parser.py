@@ -1,7 +1,15 @@
+"""
+Logic for parsing poetry.lock files is written here
+"""
 import re
 
 
 class Package:
+    """
+    This class handles logic for parsing single package, which includes data in [[package]] and [package.dependencies]
+    and [package.extras] that are with it
+    """
+
     def __init__(self, text):
         self.__dependencies = []
         self.__extras = []
@@ -39,15 +47,11 @@ class Package:
             'extras': self.__extras
         }
 
-    def print_info(self):
-        print(f"""---
-        Name: {self.__name}
-        Description: {self.__description}
-        Dependencies: {self.__dependencies}
-        Extras: {self.__extras}""")
-
 
 class PackageParser:
+    """
+    This class is used to parse string to a format that is going to be used throughout the application
+    """
     __supported_versions = ['1.1']
 
     def __init__(self, text):
